@@ -4,6 +4,12 @@ Responsive Web Design - FreeCodeCamp
 
 ## What this repo about?
 
+### Heading 3
+
+#### Heading 4.1
+
+#### Heading 4.2
+
 This is my HTML exercise
 
 ## Previews
