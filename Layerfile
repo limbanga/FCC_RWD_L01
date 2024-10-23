@@ -11,7 +11,7 @@ RUN apt install nginx
 RUN apt install certbot python3-certbot-nginx
 RUN certbot --nginx -d fccrwdl01.onwebapp.io
 
-RUN cat ss.conf >> /etc/nginx/sites-available/default
+RUN cat ssl.conf >> /etc/nginx/sites-available/default
 
 
 RUN sudo nginx -t
