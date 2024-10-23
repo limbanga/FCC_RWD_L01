@@ -7,9 +7,40 @@ RUN curl -sL https://deb.nodesource.com/setup_12.x | bash && \
     apt install nodejs && \
     rm -f /etc/apt/sources.list.d/nodesource.list
 RUN npm install -g http-server
+RUN apt install nginx
+RUN apt install certbot python3-certbot-nginx
+RUN certbot --nginx -d fccrwdl01.onwebapp.io
+
+RUN echo "server {
+    listen 80;
+    listen [::]:80;
+    server_name your-domain.com;
+    return 301 https://\$host\$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name fccrwdl01.onwebapp.io;
+
+    ssl_certificate /etc/letsencrypt/live/your-domain.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/your-domain.com/privkey.pem;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host \$host;
+        proxy_cache_bypass \$http_upgrade;
+    }
+}" >> /etc/nginx/sites-available/default
+
+
+RUN sudo nginx -t
+RUN sudo systemctl restart nginx
 
 COPY . .
-RUN echo 'hello' > hello.html
+
 
 RUN BACKGROUND http-server -p 8000
 EXPOSE WEBSITE http://localhost:8000
